@@ -4,42 +4,92 @@
 
 <div class="d-flex justify-content-between mb-3">
     <h2>Products</h2>
-    <a href="{{ route('products.create') }}" class="btn btn-primary">+ Add Product</a>
+
+    <div>
+        <a href="{{ route('products.trash') }}" class="btn btn-dark">
+            Trash
+        </a>
+
+        <a href="{{ route('products.create') }}" class="btn btn-primary">
+            + Add Product
+        </a>
+    </div>
 </div>
 
+<!-- SEARCH -->
+<form method="GET" class="mb-3">
+    <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search Product..."
+        value="{{ request('search') }}"
+    >
+</form>
+
+<!-- TABLE -->
+<div class="table-responsive">
 <table class="table table-bordered table-striped">
+
     <thead class="table-dark">
         <tr>
             <th>ID</th>
             <th>Title</th>
             <th>Price</th>
-            <th width="150">Action</th>
+            <th width="170">Action</th>
         </tr>
     </thead>
+
     <tbody>
+
         @forelse($products as $p)
         <tr>
             <td>{{ $p->p_id }}</td>
             <td>{{ $p->title }}</td>
             <td>₹ {{ $p->price }}</td>
-            <td>
-                <a href="{{ route('products.edit', $p->p_id) }}" class="btn btn-sm btn-warning">Edit</a>
 
-                <form action="{{ route('products.destroy', $p->p_id) }}" method="POST" class="d-inline">
+            <td>
+                <a href="{{ route('products.edit', $p->p_id) }}"
+                    class="btn btn-sm btn-warning">
+                    Edit
+                </a>
+
+                <form
+                    action="{{ route('products.destroy', $p->p_id) }}"
+                    method="POST"
+                    class="d-inline"
+                >
                     @csrf
                     @method('DELETE')
-                    <button onclick="return confirm('Delete this product?')" class="btn btn-sm btn-danger">
+
+                    <button
+                        onclick="return confirm('Delete this product?')"
+                        class="btn btn-sm btn-danger"
+                    >
                         Delete
                     </button>
                 </form>
             </td>
         </tr>
+
         @empty
         <tr>
-            <td colspan="4" class="text-center">No Products Found</td>
+            <td colspan="4" class="text-center text-muted">
+                No Products Found
+            </td>
         </tr>
         @endforelse
+
     </tbody>
+
 </table>
+</div>
+
+<!-- PAGINATION (SIMPLE) -->
+<div class="d-flex justify-content-end mt-3">
+
+    {{ $products->links() }}
+
+</div>
 
 @endsection
