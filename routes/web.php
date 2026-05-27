@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\AuditController;
 
 Route::get('/', function () {
     return redirect()->route('products.index');
@@ -16,14 +17,8 @@ Route::get('/trash-products', [ProductController::class, 'trash'])
 Route::get('/restore-product/{id}', [ProductController::class, 'restore'])
     ->name('products.restore');
 
-Route::get('/audit-logs', function () {
+Route::get('/audit-logs',[AuditController::class, 'index'])
+    ->name('audit.index');
 
-    $logs = DB::table('audit_logs')
-        ->when(request('action'), function ($query) {
-            $query->where('action', request('action'));
-        })
-        ->oldest()
-        ->paginate(4);
-
-    return view('audit.index', compact('logs'));
-});
+Route::get('/audit-logs/export',[AuditController::class, 'export'])
+    ->name('audit.export');
